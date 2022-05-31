@@ -1,0 +1,210 @@
+image: node:17-alpine
+
+pipelines:
+  branches:
+    feature1:
+      - step:
+          name: Build and Deploy to feature1
+          deployment: feature1
+          size: 2x
+          caches:
+            - node
+            - nextcache
+          script:
+              - npm install
+              - npm run build
+              - rm -rf node_modules
+              - npm install --only=prod
+              - docker build -t kpi-automation-backend:feature1 .
+              - docker tag kpi-automation-backend:feature1 kpi-automation-backend:$BITBUCKET_COMMIT
+              - pipe: atlassian/aws-ecr-push-image:1.5.0
+                variables:
+                  AWS_DEFAULT_REGION: us-east-1
+                  IMAGE_NAME: kpi-automation-backend:feature1
+                  TAGS: '${BITBUCKET_COMMIT} feature1'
+              - pipe: atlassian/aws-ecs-deploy:1.6.1
+                variables:
+                  AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID # Optional if already defined in the context.
+                  AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY # Optional if already defined in the context.
+                  AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION # Optional if already defined in the context.
+                  CLUSTER_NAME: API-feature1-ECS
+                  SERVICE_NAME: kpi-api
+                  FORCE_NEW_DEPLOYMENT: 'true'
+                  WAIT: 'true'
+    feature2:
+      - step:
+          name: Build and Deploy to feature2
+          deployment: feature2
+          size: 2x
+          caches:
+            - node
+            - nextcache
+          script:
+              - npm install
+              - npm run build
+              - rm -rf node_modules
+              - npm install --only=prod
+              - docker build -t kpi-automation-backend:feature2 .
+              - docker tag kpi-automation-backend:feature2 kpi-automation-backend:$BITBUCKET_COMMIT
+              - pipe: atlassian/aws-ecr-push-image:1.5.0
+                variables:
+                  AWS_DEFAULT_REGION: us-east-1
+                  IMAGE_NAME: kpi-automation-backend:feature2
+                  TAGS: '${BITBUCKET_COMMIT} feature2'
+              - pipe: atlassian/aws-ecs-deploy:1.6.1
+                variables:
+                  AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID # Optional if already defined in the context.
+                  AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY # Optional if already defined in the context.
+                  AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION # Optional if already defined in the context.
+                  CLUSTER_NAME: API-feature2-ECS
+                  SERVICE_NAME: kpi-api
+                  FORCE_NEW_DEPLOYMENT: 'true'
+                  WAIT: 'true'
+    feature3:
+      - step:
+          name: Build and Deploy to feature3
+          deployment: feature3
+          size: 2x
+          caches:
+            - node
+            - nextcache
+          script:
+              - npm install
+              - npm run build
+              - rm -rf node_modules
+              - npm install --only=prod
+              - docker build -t kpi-automation-backend:feature3 .
+              - docker tag kpi-automation-backend:feature3 kpi-automation-backend:$BITBUCKET_COMMIT
+              - pipe: atlassian/aws-ecr-push-image:1.5.0
+                variables:
+                  AWS_DEFAULT_REGION: us-east-1
+                  IMAGE_NAME: kpi-automation-backend:feature3
+                  TAGS: '${BITBUCKET_COMMIT} feature3'
+              - pipe: atlassian/aws-ecs-deploy:1.6.1
+                variables:
+                  AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID # Optional if already defined in the context.
+                  AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY # Optional if already defined in the context.
+                  AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION # Optional if already defined in the context.
+                  CLUSTER_NAME: API-feature3-ECS
+                  SERVICE_NAME: kpi-api
+                  FORCE_NEW_DEPLOYMENT: 'true'
+                  WAIT: 'true'
+    feature4:
+      - step:
+          name: Build and Deploy to feature4
+          deployment: feature4
+          size: 2x
+          caches:
+            - node
+            - nextcache
+          script:
+              - npm install
+              - npm run build
+              - rm -rf node_modules
+              - npm install --only=prod
+              - docker build -t kpi-automation-backend:feature4 .
+              - docker tag kpi-automation-backend:feature4 kpi-automation-backend:$BITBUCKET_COMMIT
+              - pipe: atlassian/aws-ecr-push-image:1.5.0
+                variables:
+                  AWS_DEFAULT_REGION: us-east-1
+                  IMAGE_NAME: kpi-automation-backend:feature4
+                  TAGS: '${BITBUCKET_COMMIT} feature4'
+              - pipe: atlassian/aws-ecs-deploy:1.6.1
+                variables:
+                  AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID # Optional if already defined in the context.
+                  AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY # Optional if already defined in the context.
+                  AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION # Optional if already defined in the context.
+                  CLUSTER_NAME: API-feature4-ECS
+                  SERVICE_NAME: kpi-api
+                  FORCE_NEW_DEPLOYMENT: 'true'
+                  WAIT: 'true'
+    develop:
+      - step:
+          name: Build and Deploy to develop
+          deployment: development
+          size: 2x
+          caches:
+            - node
+            - nextcache
+          script:
+              - npm install
+              - npm run build
+              - rm -rf node_modules
+              - npm install --only=prod
+              - docker build -t kpi-automation-backend:develop .
+              - docker tag kpi-automation-backend:develop kpi-automation-backend:$BITBUCKET_COMMIT
+              - pipe: atlassian/aws-ecr-push-image:1.5.0
+                variables:
+                  AWS_DEFAULT_REGION: us-east-1
+                  IMAGE_NAME: kpi-automation-backend:develop
+                  TAGS: '${BITBUCKET_COMMIT} develop'
+              - pipe: atlassian/aws-ecs-deploy:1.6.1
+                variables:
+                  AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID # Optional if already defined in the context.
+                  AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY # Optional if already defined in the context.
+                  AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION # Optional if already defined in the context.
+                  CLUSTER_NAME: API-develop-ECS
+                  SERVICE_NAME: kpi-api
+                  FORCE_NEW_DEPLOYMENT: 'true'
+                  WAIT: 'true'
+    staging:
+      - step:
+          name: Build and Deploy to staging
+          deployment: staging
+          size: 2x
+          caches:
+            - node
+            - nextcache
+          script:
+              - npm install
+              - npm run build
+              - rm -rf node_modules
+              - npm install --only=prod
+              - docker build -t kpi-automation-backend:staging .
+              - docker tag kpi-automation-backend:staging kpi-automation-backend:$BITBUCKET_COMMIT
+              - pipe: atlassian/aws-ecr-push-image:1.5.0
+                variables:
+                  AWS_DEFAULT_REGION: us-east-1
+                  IMAGE_NAME: kpi-automation-backend:staging
+                  TAGS: '${BITBUCKET_COMMIT} staging'
+              - pipe: atlassian/aws-ecs-deploy:1.6.1
+                variables:
+                  AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID # Optional if already defined in the context.
+                  AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY # Optional if already defined in the context.
+                  AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION # Optional if already defined in the context.
+                  CLUSTER_NAME: API-staging-ECS
+                  SERVICE_NAME: kpi-api
+                  FORCE_NEW_DEPLOYMENT: 'true'
+                  WAIT: 'true'
+    master:
+      - step:
+          name: Build and Deploy to production
+          deployment: production
+          size: 2x
+          caches:
+            - node
+            - nextcache
+          script:
+              - npm install
+              - npm run build
+              - rm -rf node_modules
+              - npm install --only=prod
+              - docker build -t kpi-automation-backend:latest .
+              - docker tag kpi-automation-backend:latest kpi-automation-backend:$BITBUCKET_COMMIT
+              - pipe: atlassian/aws-ecr-push-image:1.5.0
+                variables:
+                  AWS_DEFAULT_REGION: us-east-1
+                  IMAGE_NAME: kpi-automation-backend:latest
+                  TAGS: '${BITBUCKET_COMMIT} latest'
+              - pipe: atlassian/aws-ecs-deploy:1.6.1
+                variables:
+                  AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID # Optional if already defined in the context.
+                  AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY # Optional if already defined in the context.
+                  AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION # Optional if already defined in the context.
+                  CLUSTER_NAME: API-production-ECS
+                  SERVICE_NAME: kpi-api
+                  FORCE_NEW_DEPLOYMENT: 'true'
+                  WAIT: 'true'
+definitions:
+  caches:
+    nextcache: .next/cache

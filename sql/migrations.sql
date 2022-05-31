@@ -1,0 +1,42 @@
+-- noinspection SqlNoDataSourceInspectionForFile
+
+alter table Reports add column if not exists group_stats jsonb;
+
+ALTER TABLE ReportGroups RENAME COLUMN name TO "group_name";
+ALTER TABLE ReportGroups ALTER COLUMN "group_name" SET DEFAULT '';
+ALTER TABLE ReportGroups ALTER COLUMN "privacy" SET DEFAULT '';
+ALTER TABLE ReportGroups RENAME COLUMN reportId TO "report_id";
+ALTER TABLE ReportGroups ALTER COLUMN "report_id" SET DEFAULT '{}'::_varchar;
+ALTER TABLE ReportGroups RENAME COLUMN memberCount TO "member_count";
+ALTER TABLE ReportGroups ALTER COLUMN "member_count" SET DEFAULT 0;
+ALTER TABLE ReportGroups RENAME COLUMN businessCategory TO "business_category";
+ALTER TABLE ReportGroups ALTER COLUMN "business_category" SET DEFAULT '';
+ALTER TABLE ReportGroups RENAME COLUMN fbGroupId TO "fb_group_id";
+ALTER TABLE ReportGroups ALTER COLUMN "fb_group_id" SET DEFAULT '';
+ALTER TABLE ReportGroups RENAME COLUMN groupInstallationStartedAtUTC TO "group_installation_started_at_utc";
+ALTER TABLE ReportGroups ALTER COLUMN "group_installation_started_at_utc" DROP NOT NULL;
+ALTER TABLE ReportGroups RENAME COLUMN topTenCities TO "top_ten_cities";
+ALTER TABLE ReportGroups ALTER COLUMN "top_ten_cities" SET DEFAULT '';
+ALTER TABLE ReportGroups ALTER COLUMN "state" SET DEFAULT '';
+ALTER TABLE ReportGroups RENAME COLUMN country TO "location";
+ALTER TABLE ReportGroups ALTER COLUMN "location" SET DEFAULT '';
+ALTER TABLE ReportGroups RENAME COLUMN groupId TO "group_id";
+ALTER TABLE ReportGroups ALTER COLUMN "group_id" SET DEFAULT '';
+ALTER TABLE ReportGroups ADD COLUMN IF NOT EXISTS "metadata" jsonb NOT null default '{}'::jsonb;
+ALTER TABLE ReportGroups ADD COLUMN IF NOT EXISTS "timezone_name" varchar NULL;
+ALTER TABLE ReportGroups ADD COLUMN IF NOT EXISTS "default_task_date" timestamptz;
+ALTER TABLE ReportGroups ADD COLUMN IF NOT EXISTS "assets_kpis" varchar NULL;
+ALTER TABLE ReportGroups ADD COLUMN IF NOT EXISTS "currency" varchar NOT NULL DEFAULT '';
+ALTER TABLE ReportGroups ADD COLUMN IF NOT EXISTS "campaign_asset_proposal_sent" boolean NOT NULL DEFAULT false;
+ALTER TABLE ReportGroups ADD COLUMN IF NOT EXISTS "group_task_status" varchar NOT NULL DEFAULT '';
+ALTER TABLE ReportGroups ADD COLUMN IF NOT EXISTS "admin_count" int4 NOT NULL DEFAULT 0;
+ALTER TABLE ReportGroups ADD COLUMN IF NOT EXISTS "icon_url" varchar(2048) NOT NULL DEFAULT '';
+ALTER TABLE ReportGroups ADD COLUMN IF NOT EXISTS "community_admin_id" varchar NOT NULL DEFAULT '';
+ALTER TABLE ReportGroups ADD COLUMN IF NOT EXISTS "campaign_id" varchar NOT NULL DEFAULT '';
+ALTER TABLE ReportGroups ADD COLUMN IF NOT EXISTS "posts_engagement_rate_last_ninety_days" float8 NOT NULL DEFAULT 0;
+ALTER TABLE ReportGroups ADD COLUMN IF NOT EXISTS "total_keyword_mentions" int4 NOT NULL DEFAULT 0;
+ALTER TABLE ReportGroups ADD COLUMN IF NOT EXISTS "is_accepted_by_community_admin" boolean NOT NULL DEFAULT false;
+ALTER TABLE ReportGroups ADD COLUMN IF NOT EXISTS "campaign_post_engagement_rate_last_ninety_days" float8 NOT NULL DEFAULT 0;
+ALTER TABLE ReportGroups ADD COLUMN IF NOT EXISTS "total_brand_mentions" int4 NOT NULL DEFAULT 0;
+ALTER TABLE ReportGroups ADD COLUMN IF NOT EXISTS "pricing" float8 NOT NULL DEFAULT 0;
+ALTER TABLE ReportGroups ADD COLUMN IF NOT EXISTS "total_hashtag_mentions" int4 NOT NULL DEFAULT 0;
