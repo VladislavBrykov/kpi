@@ -4,7 +4,7 @@ import { errorHandler } from "./src/exceptions/error.handler";
 import cors from "cors";
 
 const app: Application = express();
-const port = 8000;
+const port = 8800;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

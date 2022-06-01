@@ -50,6 +50,7 @@ type GroupStats = {
   brandSOV: number;
   brandMentions: number;
   groupId: string;
+  date: string;
 };
 
 const getSelectionKeywords = (keywords: any[], isBrands = false) => {
@@ -79,9 +80,8 @@ const getConversations = async (
   table: string
 ) => {
   try {
-    const conversationQuery = `select id, groupid, textlower as rawTextLower from ${table} where recordedatdate >= '${startDateUtc}' and createdatutc >= '${startDateUtc}' and createdatutc < '${endDateUtc}' and groupid in (${groupsList}) and ((${orSelection} ) or (parentsourceid in (select sourceid from ${table} where recordedatdate >= '${startDateUtc}' and createdatutc >= '${startDateUtc}' and createdatutc < '${endDateUtc}' and groupid in (${groupsList}) and ${orSelection} and type = 'Post' and grouptype = 'Facebook')))`;
+    const conversationQuery = `select id, groupid, textlower, recordedatdate as rawTextLower from ${table} where recordedatdate >= '${startDateUtc}' and createdatutc >= '${startDateUtc}' and createdatutc < '${endDateUtc}' and groupid in (${groupsList}) and ((${orSelection} ) or (parentsourceid in (select sourceid from ${table} where recordedatdate >= '${startDateUtc}' and createdatutc >= '${startDateUtc}' and createdatutc < '${endDateUtc}' and groupid in (${groupsList}) and ${orSelection} and type = 'Post' and grouptype = 'Facebook')))`;
     const results = await KnexClient.raw(conversationQuery);
-
     return (results['rows']) ? results['rows'] : [];
   } catch (err) {
     console.log(err);
@@ -146,7 +146,6 @@ export const generate = async (payload: ReportMetricsInput): Promise<any> => {
         groupIdToGroupName[campaignGroupData.groupId] = campaignGroupData.groupName
       }
       const campaignGroupsList = campaignGroupIds.join(',');
-      console.log(groupIdToGroupName);
       let categoryKeywords = dynamoDbService.emptyItemList;
       for (const category of payload.categories) {
         const params = dynamoDbService.createParamsByCategory(category);
@@ -197,7 +196,6 @@ export const generate = async (payload: ReportMetricsInput): Promise<any> => {
         });
       }
 
-      console.log('got data');
       const group_stats: { [key: string]: Partial<GroupStats> } = {};
       for (let row of categoryConversation) {
         let groupName = groupIdToGroupName[row['groupid']];
@@ -208,6 +206,7 @@ export const generate = async (payload: ReportMetricsInput): Promise<any> => {
           group_stats[groupName] = {
             categoryConversation: 1,
             groupId: row['groupid'],
+            date: row['rawtextlower'],
             brandConversation: 0,
             brandMentions: 0
           };
@@ -242,7 +241,6 @@ export const generate = async (payload: ReportMetricsInput): Promise<any> => {
           group_stats[groupName].brandConversation = 1;
         }
       }
-      console.log(group_stats);
       const sovResult: any = {};
       const sovBrandsList: string[] = [];
       for (const keyword of categoryKeywords) {
